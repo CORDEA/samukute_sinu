@@ -1,4 +1,4 @@
-require 'net/http'
+require 'open-uri'
 require 'uri'
 
 HOST = "api.openweathermap.org"
@@ -19,9 +19,5 @@ def build_url(city, id)
 end
 
 def fetch(city)
-  url = build_url(city, ENV["APP_ID"])
-  req = Net::HTTP::Get.new(url.to_s)
-  res = Net::HTTP.start(url.host, url.port) do |http|
-    http.request(req)
-  end
+  res = build_url(city, ENV["APP_ID"]).read
 end
