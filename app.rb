@@ -6,6 +6,8 @@ require 'ostruct'
 HOST = "api.openweathermap.org"
 PATH = "/data/2.5/weather"
 
+COLD_TEMP = 2
+
 def build_url(city, id)
   URI::HTTPS.build(
       {
@@ -20,7 +22,14 @@ def build_url(city, id)
       })
 end
 
+def is_cold(obj)
+  obj.main.temp <= COLD_TEMP
+end
+
 def fetch(city)
   res = build_url(city, ENV["APP_ID"]).read
   JSON.parse(res, object_class: OpenStruct)
 end
+
+obj = fetch("Tokyo")
+puts is_cold(obj)
