@@ -1,5 +1,7 @@
 require 'open-uri'
 require 'uri'
+require 'json'
+require 'ostruct'
 
 HOST = "api.openweathermap.org"
 PATH = "/data/2.5/weather"
@@ -20,4 +22,5 @@ end
 
 def fetch(city)
   res = build_url(city, ENV["APP_ID"]).read
+  JSON.parse(res, object_class: OpenStruct)
 end
