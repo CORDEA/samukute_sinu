@@ -1,12 +1,14 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    dotenv (2.6.0)
     rake (12.3.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  dotenv
   rake
 
 BUNDLED WITH
