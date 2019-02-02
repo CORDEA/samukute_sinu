@@ -2,11 +2,13 @@ require 'open-uri'
 require 'uri'
 require 'json'
 require 'ostruct'
+require 'twitter'
 
 HOST = "api.openweathermap.org"
 PATH = "/data/2.5/weather"
 
 COLD_TEMP = 2
+SINU = "寒くて死ぬ"
 
 def build_url(city, id)
   URI::HTTPS.build(
@@ -22,7 +24,7 @@ def build_url(city, id)
       })
 end
 
-def is_cold(obj)
+def is_cold?(obj)
   obj.main.temp <= COLD_TEMP
 end
 
@@ -31,5 +33,17 @@ def fetch(city)
   JSON.parse(res, object_class: OpenStruct)
 end
 
-obj = fetch("Tokyo")
-puts is_cold(obj)
+def try_post(city)
+  obj = fetch(city)
+  client = Twitter::REST::Client.new do |config|
+    config.consumer_key = ENV['TWITTER_CONSUMER_KEY']
+    config.consumer_secret = ENV['TWITTER_CONSUMER_SECRET']
+    config.access_token = ENV['TWITTER_ACCESS_TOKEN']
+    config.access_token_secret = ENV['TWITTER_ACCESS_TOKEN_SECRET']
+  end
+  if is_cold?(obj)
+    client.update(SINU)
+  end
+end
+
+try_post("Tokyo")
